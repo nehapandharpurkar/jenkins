@@ -1,37 +1,13 @@
-pipeline {
-    agent any
-
-    stages {
-        stage('Hello') {
-            steps {
-                echo 'Hello World'
-            }
-        }
-        stage('build') {
-            steps {
-                echo 'building'
-            }
-        }
-        stage('deploy') {
-            steps {
-                echo 'deploying'
-            }
-        }
-        stage('SonarQube analysis') {
-            steps {
-                script {
-                    def scannerHome = tool 'sonarqube scanner'; // Assuming 'SonarQube Scanner' tool is configured in Jenkins
-                    withSonarQubeEnv('sonarqube scanner') {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                }
-            }
-        }
+node {
+  stage('SCM') {
+    checkout scm
+  }
+  stage('SonarQube Analysis') {
+    def scannerHome = tool 'SonarScanner';
+    withSonarQubeEnv() {
+      sh "${scannerHome}/bin/sonar-scanner"
     }
-    
-    }
-    
-    
-    
+  }
+}
 
 
